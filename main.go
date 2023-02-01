@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,13 +26,13 @@ func main() {
 						breakFlag = true
 						break
 					}
+
 				}
 			}
 
 			if breakFlag {
 				break
 			}
-			
 		}
 	})
 
@@ -45,28 +46,31 @@ func main() {
 		yearTypeInt, err := strconv.Atoi(yearParam)
 		if err != nil {
 			log.Println(err)
-		}	
+		}
 
 		// Образуем дату time.Time с заданнным year.
 		yearTypeTime := time.Date(yearTypeInt, time.January, 1, 0, 0, 0, 0, time.UTC)
-		
+
 		// Сохраняем только актуальный год, месяц и день, чтобы часы, минуты и.т.д
 		// не мешали исчислению прошедших дней.
 		Now := time.Now().UTC()
 		curTimestamp := time.Date(Now.Year(), Now.Month(), Now.Day(), 0, 0, 0, 0, time.UTC)
-		
+
 		// Находим разницу между заданной датой и настоящей датой.
-		sinceYear := yearTypeTime.Sub(curTimestamp)	
-		
+		sinceYear := yearTypeTime.Sub(curTimestamp)
+
 		// Находим количество прошедших/предстоящих дней от заданной даты.
 		// Для этого переведем часы в дни поделив часы на 24, так как
 		// в днях (имеется ввиду в сутках) 24 часа.
 		// В случае, если значение отрицательное - берём модуль числа.
 		daysResponse := int(math.Abs(sinceYear.Hours() / 24))
-		
-		// Отправляем ответ.
-		ctx.String(http.StatusOK, "%d", daysResponse)
 
+		// Отправляем ответ.
+		if yearTypeInt > curTimestamp.Year() {
+			ctx.String(http.StatusOK, "Days left: %d", daysResponse)
+		} else if yearTypeInt < curTimestamp.Year() && yearTypeInt == curTimestamp.Year() {
+			ctx.String(http.StatusOK, "Days gone: %d", daysResponse)
+		}
 	})
 
 	// Запускаем сервер на порту по умолчанию.
