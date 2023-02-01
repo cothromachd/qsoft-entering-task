@@ -68,7 +68,7 @@ func main() {
 		// Отправляем ответ.
 		if yearTypeInt > curTimestamp.Year() {
 			ctx.String(http.StatusOK, "Days left: %d", daysResponse)
-		} else if yearTypeInt < curTimestamp.Year() && yearTypeInt == curTimestamp.Year() {
+		} else if yearTypeInt < curTimestamp.Year() || yearTypeInt == curTimestamp.Year() {
 			ctx.String(http.StatusOK, "Days gone: %d", daysResponse)
 		}
 	})
