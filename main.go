@@ -26,7 +26,6 @@ func main() {
 						breakFlag = true
 						break
 					}
-
 				}
 			}
 
