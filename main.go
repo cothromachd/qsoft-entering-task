@@ -14,10 +14,10 @@ func main() {
 	router := gin.Default()
 
 	router.Use(func(ctx *gin.Context) {
+
 		headersMap, breakFlag := ctx.Request.Header, false
 
 		for key, value := range headersMap {
-
 			if strings.ToLower(key) == "x-ping" {
 				for _, valueVal := range value {
 					if valueVal == "ping" {
@@ -31,9 +31,8 @@ func main() {
 			if breakFlag {
 				break
 			}
-
+			
 		}
-
 	})
 
 	router.Any("/when/:year", func(ctx *gin.Context) {
