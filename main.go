@@ -1,10 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"math"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -12,6 +14,22 @@ import (
 
 func main() {
 	router := gin.Default()
+
+	router.Use(func(ctx *gin.Context) {
+		headersMap := ctx.Request.Header
+		fmt.Println(headersMap)
+
+		for key, value := range headersMap {
+			if strings.ToLower(key) == "x-ping" {
+				for _, valueVal := range value {
+					if valueVal == "ping" {
+						ctx.Header("X-PONG", "pong")
+					}
+				}
+			}
+		}
+
+	})
 
 	router.Any("/when/:year", func(ctx *gin.Context) {
 
